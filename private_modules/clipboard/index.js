@@ -11,7 +11,7 @@ function copyElementContent(elementSelector) {
         return
     }
 
-    _copyElementContent(node)
+    copyNodeContent(node)
 }
 
 /**
@@ -26,11 +26,11 @@ function copyText(text) {
     node.style.top = '-1000px'
     node.style.left = '-1000px'
     document.body.appendChild(node)
-    _copyElementContent(node)
+    copyNodeContent(node)
     document.body.removeChild(node)
 }
 
-function _copyElementContent(node) {
+function copyNodeContent(node) {
     let selection = window.getSelection()
     let range = document.createRange()
 
@@ -46,4 +46,4 @@ function _copyElementContent(node) {
     selection.removeAllRanges()
 }
 
-export { copyElementContent, copyText }
+export { copyElementContent, copyText, copyNodeContent }

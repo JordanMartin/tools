@@ -1,6 +1,14 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+  
+  <router-link class="back-home-btn" tag="div" :to="{name: 'home'}">
+    <a><img src="/static/images/back-home.png" /></a>
+    <span>Jordan's Toolbox</span>
+  </router-link>
+      
+    </router-link>
+
+    <router-view class="active-tool"></router-view>
   </div>
 </template>
 
@@ -10,10 +18,9 @@ export default {
 }
 </script>
 
-<style>
-  body {
-    font-family: sans-serif;
-    background-image: url(/static/ag-square.png);
-    color: #333;
+<style src="styles/global.scss" lang="scss"></style>
+<style lang="scss" scoped>
+  .active-tool {
+    margin-top: 80px;
   }
 </style>

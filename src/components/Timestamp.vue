@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <img src="/static/stopwatch.png" alt="">
+    <img src="/static/images/stopwatch.png">
     <h1>Timestamp calculator</h1>
     
     Enter a timestamp (in milliseconds) or a date
@@ -29,8 +29,9 @@ import _ from 'lodash'
 
 export default {
   mounted () {
+    this.textMasks = []
     _.each(document.querySelectorAll('input[data-mask]'), input => {
-      TextMask({
+      let textMask = TextMask({
         inputElement: input,
         mask: input.getAttribute('data-mask').split('').map(c => {
           if (c === '_') {
@@ -44,6 +45,8 @@ export default {
         placeholderChar: '_',
         keepCharPositions: true
       })
+
+      this.textMasks.push(textMask)
     })
 
     this.$tsInput = document.querySelector('#ts-input')
@@ -54,6 +57,7 @@ export default {
   },
   destroyed () {
     clearInterval(this.currentTsTimer)
+    this.textMasks.forEach(tm => tm.destroy())
   },
   data: function () {
     return {
@@ -97,8 +101,10 @@ export default {
 <style lang="scss" scoped>
   .wrapper {
     text-align: center;
+    background-image: url(/static/bg/escheresque_ste.png);
     background-color: #86e5ec;
     padding: 50px;
+    color: #fefefe;
   }
   .ts-input-label {
     display: block;
