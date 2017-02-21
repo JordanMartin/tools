@@ -13,5 +13,7 @@ export default {
 <style>
   body {
     font-family: sans-serif;
+    background-image: url(/static/ag-square.png);
+    color: #333;
   }
 </style>

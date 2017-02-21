@@ -1,61 +1,82 @@
 <template>
   <div class="wrapper">
+    <img src="/static/stopwatch.png" alt="">
     <h1>Timestamp calculator</h1>
+    
+    Enter a timestamp (in milliseconds) or a date
+    <br><br>
+    <input id="ts-input" class="input" type="text" size="16" v-on:keyup="onTsChange"
+      :class="{error: tsError}" placeholder="_____________" data-mask="_____________">
+    
+    <span class="transfert-arrow">⇄</span>
 
-    <label class="ts-input-label" for="ts-input">Enter your timestamp (10 or 13 digits)</label>
-    <input id="ts-input" size="13" type="text" :class="{error: inputError}" v-model="timestamp">
-
-    <div v-if="!inputError" class="formatted">
-      <h3>Formatted date</h3>
-      <div v-for="result in results">{{ result }}</div>
-    </div>
-    <div v-else>
-      Invalid timestamp. It must be 10 digits in seconds or 13 digits in miliseconds.
-    </div>
+    <input id="date-input" class="input" type="text" size="23" v-on:keyup="onDateChange"
+      :class="{error: dateError}" placeholder="DD/MM/YYYY HH:MM:SS,mmm" data-mask="__/__/____ __:__:__,___">
 
    <h2>Current timestamp</h2>
-   <div>
-     In seconds: <span id="currTsSeconds">{{ currentTsSeconds }}</span> <button v-on:click="copyElementContent('#currTsSeconds')">copy</button>
+   <div class="curr-ts">
+     <span id="currTs">{{ currentTs }}</span> <button v-on:click="copyElementContent('#currTs')">copy</button>
    </div>
-   <div>
-     In milliseconds: <span id="currTs">{{ currentTs }}</span> <button v-on:click="copyElementContent('#currTs')">copy</button>
    </div>
   </div>
 </template>
 
 <script>
 import moment from 'moment'
+import TextMask from 'vanilla-text-mask'
 import { copyElementContent } from '../../private_modules/clipboard'
 
 export default {
   mounted () {
-    setInterval(() => (this.currentTs = new Date().getTime()), 1000)
+    document.querySelectorAll('input[data-mask]').forEach(input => {
+      TextMask({
+        inputElement: input,
+        mask: input.getAttribute('data-mask').split('').map(c => {
+          if (c === '_') {
+            return /\d/
+          } else if (c === '#') {
+            return /[A-Z]/i
+          } else {
+            return c
+          }
+        }),
+        placeholderChar: '_',
+        keepCharPositions: true
+      })
+    })
+
+    this.$tsInput = document.querySelector('#ts-input')
+    this.$dateInput = document.querySelector('#date-input')
+
+    // Refresh current timestamp every seconds
+    this.currentTsTimer = setInterval(() => (this.currentTs = new Date().getTime()), 111)
+  },
+  destroyed () {
+    clearInterval(this.currentTsTimer)
   },
   data: function () {
     return {
       timestamp: String(new Date().getTime()),
       currentTs: new Date().getTime(),
-      formats: [
-        'MMMM DD MMMM YYYY HH:mm:ss,SSS',
-        'DD/MM/YYYY HH:mm:ss,SSS'
-      ]
+      tsError: false,
+      dateError: false
     }
   },
   methods: {
-    copyElementContent
+    copyElementContent,
+    onTsChange: function (ev) {
+      let tsValue = ev.target.value.replace(/[,_ ]/g, '')
+      let ts = Number(tsValue)
+      this.$dateInput.value = moment(ts).format('DD/MM/YYYY HH:mm:ss,SSS')
+    },
+    onDateChange: function (ev) {
+      let date = ev.target.value.replace(/[_]/, 0)
+      this.$tsInput.value = moment(date, 'DD/MM/YYYY HH:mm:ss,SSS').unix()
+    }
   },
   computed: {
     currentTsSeconds: function () {
       return Math.trunc(this.currentTs / 1000)
-    },
-    results: function () {
-      let ts = Number(this.timestamp.trim())
-
-      if (this.timestamp.length === 10) {
-        ts *= 1000
-      }
-
-      return this.formats.map(format => moment(ts).format(format))
     },
     inputError: function () {
       if (!this.timestamp) {
@@ -69,17 +90,20 @@ export default {
     }
   }
 }
+
 </script>
 
 <style lang="scss" scoped>
   .wrapper {
     text-align: center;
+    background-color: #86e5ec;
+    padding: 50px;
   }
   .ts-input-label {
     display: block;
     margin-bottom: 10px;
   }
-  #ts-input {
+  .input {
     padding: 10px 20px;
     border: none;
     border-left: solid 10px seagreen;
@@ -95,13 +119,16 @@ export default {
     }
     &.error {
       border-color: red;
-      box-shadow: 1px 1px 5px red;
+      box-shadow: 1px 1px 5px rgba(255, 100, 100, 0.7);
     }
   }
-  .formatted {
-    margin-top: 10px;
-    > div {
-      padding: 5px;
-    }
+  .curr-ts {
+    font-family: monospace;
+    font-size: 20px;
+  }
+  .transfert-arrow {
+    font-size: 21px;
+    margin: 0 10px;
+    display: inline-block;
   }
 </style>
