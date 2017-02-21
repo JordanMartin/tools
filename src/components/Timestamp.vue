@@ -25,10 +25,11 @@
 import moment from 'moment'
 import TextMask from 'vanilla-text-mask'
 import { copyElementContent } from '../../private_modules/clipboard'
+import _ from 'lodash'
 
 export default {
   mounted () {
-    document.querySelectorAll('input[data-mask]').forEach(input => {
+    _.each(document.querySelectorAll('input[data-mask]'), input => {
       TextMask({
         inputElement: input,
         mask: input.getAttribute('data-mask').split('').map(c => {
