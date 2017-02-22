@@ -1,14 +1,17 @@
 <template>
-  <div class="wrapper">
+  <div class="tool-wrapper">
     <img src="/static/images/coding.png">
     <h1>Code Editor</h1>
 
     <div class="controls">
-      syntax: 
-      <select v-model="syntaxName">
-        <option v-for="s in syntaxList" :value="s.name">{{ s.name }}</option>
-      </select>
-      <button v-on:click="copy">copy</button>
+      
+      <div class="select">
+        <span>Syntax:</span>
+        <select v-model="syntaxName">
+          <option v-for="s in syntaxList" :value="s.name">{{ s.name }}</option>
+        </select>
+      </div>
+      <img src="/static/images/clipboard.png" class="img-btn" alt="copy" title="copy" v-on:click="copy"/>
     </div>
     
     <div id="code-wrapper"></div>
@@ -41,9 +44,13 @@ export default {
     this.$textarea.addEventListener('input', (ev) => {
       this.updateHighlight()
     })
+    this.$textarea.onmousewheel = (ev) => {
+      ev.target.scrollTop -= ev.wheelDeltaY
+      ev.preventDefault()
+    }
     this.$textarea.addEventListener('scroll', (ev) => {
       this.$viewer.scrollTop = ev.target.scrollTop
-    })
+    }, true)
     this.$textarea.addEventListener('keydown', ev => {
       if (ev.keyCode === 9) {
         ev.target.value += '    '
@@ -92,14 +99,79 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-  .wrapper {
-    text-align: center;
-    background-image: url(/static/bg/escheresque_ste.png);
-    background-color: #86e5ec;
-    padding: 50px;
-    color: #fefefe;
+<style lang="scss">
+.select {
+  display: inline-block;
+  color: #fff;
+  background: #009688;
+  border-bottom: solid 2px #00ccb9;
+  border-right: solid 2px #00ccb9;
+  border-radius: 5px;
+  overflow: hidden;
+
+  span {
+    display: inline-block;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 13px;
   }
+  > select {
+    padding: 5px 8px;
+    background: #009688;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    &:focus {
+      outline: none;
+    }
+  }
+}
+.code-editor {
+    position: relative;
+    background: #fff;
+    color: #000;
+    padding: 15px;
+    overflow: hidden;
+    height: 500px;
+
+    > textarea {
+      position: absolute;
+      font-size: 15px;
+      font-family: monospace;
+      width: calc(100% - 16px);
+      top: 15px;
+      left: 15px;
+      z-index: 1;
+      opacity: 0.4;
+      border: none;
+      padding: 0;
+      background: transparent;
+      min-height: 500px;
+      resize: none;
+      word-break: break-all;
+      overflow-y: scroll;
+      &:hover, &:focus {
+        outline: none;
+      }
+    }
+    > div {
+      pointer-events: none;
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      right: 16px;
+      bottom: 15px;
+      z-index: 2;
+      text-align: left;
+      font-size: 15px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      word-break: break-all;
+      overflow: hidden;
+    }
+  }
+</style>
+<style lang="scss" scoped>
   #code-wrapper {
     border-radius: 5px;
     box-shadow: 0 0 10px #000;

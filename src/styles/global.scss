@@ -4,66 +4,57 @@ body {
     color: #333;
     margin: 0;
 }
-
-.back-home-btn {
+.top-header {
     position: fixed;
-    left: 10px;
-    top: 10px;
-    opacity: 1;
+    padding: 10px;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    overflow: hidden;
+    transform: translateY(0);
     transition: all .3s;
+
     &.router-link-active {
-        opacity: 0;
+        transform: translateY(-100%);
     }
     img {
         vertical-align: middle;
+        max-width: 48px;
+        max-height: 48px;
     }
     span {
+        position: relative;
+        top: 5px;
         margin-left: 10px;
         font-size: 22px;
         font-weight: bold;
     }
 }
 
-.code-editor {
-    position: relative;
-    background: #fff;
-    color: #000;
-    padding: 15px;
-    overflow: hidden;
-    height: 500px;
+.active-tool {
+    position: fixed;
+    top: 68px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
 
-    > textarea {
-      position: absolute;
-      font-size: 15px;
-      font-family: monospace;
-      width: calc(100% - 15px);
-      top: 15px;
-      left: 15px;
-      right: 15px;
-      bottom: 15px;
-      z-index: 1;
-      opacity: 0.4;
-      border: none;
-      padding: 0;
-      background: transparent;
-      min-height: 500px;
-      resize: none;
-      &:hover, &:focus {
-        outline: none;
-      }
+.tool-wrapper {
+    text-align: center;
+    background-image: url(/static/bg/escheresque_ste.png);
+    background-color: #86e5ec;
+    padding: 50px;
+    color: #fefefe;
+}
+
+.img-btn {
+    cursor: pointer;
+    transition: transform .2s;
+    &:hover {
+        transform: rotateZ(10deg);
     }
-    > div {
-      pointer-events: none;
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      right: 15px;
-      bottom: 15px;
-      z-index: 2;
-      text-align: left;
-      font-size: 15px;
-      font-family: monospace;
-      white-space: pre-wrap;
-      overflow: hidden;
+    &:active {
+        transform: rotateZ(10deg) scale(0.9);
     }
-  }
+}

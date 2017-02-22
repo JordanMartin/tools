@@ -1,23 +1,31 @@
 <template>
-  <div class="wrapper">
+  <div class="tool-wrapper">
+
     <img src="/static/images/stopwatch.png">
-    <h1>Timestamp calculator</h1>
+    <h1 class="tool-name">Timestamp calculator</h1>
     
-    Enter a timestamp (in milliseconds) or a date
-    <br><br>
-    <input id="ts-input" class="input" type="text" size="16" v-on:keyup="onTsChange"
-      :class="{error: tsError}" placeholder="_____________" data-mask="_____________">
-    
-    <span class="transfert-arrow">⇄</span>
+    <div class="block">
+      <label class="labeled-input">
+        <span>Timestamp in milliseconds</span>
+        <input id="ts-input" class="input" type="text" size="12" v-on:keyup="onTsChange"
+          :class="{error: tsError}" placeholder="_____________" data-mask="_____________">
+      </label>
 
-    <input id="date-input" class="input" type="text" size="23" v-on:keyup="onDateChange"
-      :class="{error: dateError}" placeholder="DD/MM/YYYY HH:MM:SS,mmm" data-mask="__/__/____ __:__:__,___">
+      <span class="transfert-arrow">⇄</span>
 
-   <h2>Current timestamp</h2>
-   <div class="curr-ts">
-     <span id="currTs">{{ currentTs }}</span> <button v-on:click="copyElementContent('#currTs')">copy</button>
-   </div>
-   </div>
+      <label class="labeled-input">
+        <span>Date DD/MM/YYYY HH:MM:SS,mmm</span>
+        <input id="date-input" class="input" type="text" size="22" v-on:keyup="onDateChange"
+          :class="{error: dateError}" placeholder="__/__/____ __:__:__,___" data-mask="__/__/____ __:__:__,___">
+      </label>
+    </div>
+
+    <div class="block">
+      <h2>Current timestamp</h2>
+      <div class="curr-ts">
+        <span id="currTs">{{ currentTs }}</span> <img src="/static/images/clipboard.png" class="img-btn" alt="copy" title="copy" v-on:click="copyElementContent('#currTs')"/>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -73,59 +81,59 @@ export default {
       let tsValue = ev.target.value.replace(/[,_ ]/g, '')
       let ts = Number(tsValue)
       this.$dateInput.value = moment(ts).format('DD/MM/YYYY HH:mm:ss,SSS')
+      this.dateError = false
     },
     onDateChange: function (ev) {
       let date = ev.target.value.replace(/[_]/, 0)
-      this.$tsInput.value = moment(date, 'DD/MM/YYYY HH:mm:ss,SSS').unix()
+      this.$tsInput.value = moment(date, 'DD/MM/YYYY HH:mm:ss,SSS').unix() * 1000
+      this.dateError = isNaN(this.$tsInput.value)
     }
   },
   computed: {
     currentTsSeconds: function () {
       return Math.trunc(this.currentTs / 1000)
-    },
-    inputError: function () {
-      if (!this.timestamp) {
-        return true
-      }
-      let ts = this.timestamp.trim()
-      let lengthOk = ts.length === 10 || ts.length === 13
-      let validInt = !isNaN(ts)
-
-      return !(lengthOk && validInt)
     }
   }
 }
-
 </script>
 
 <style lang="scss" scoped>
-  .wrapper {
-    text-align: center;
-    background-image: url(/static/bg/escheresque_ste.png);
-    background-color: #86e5ec;
-    padding: 50px;
-    color: #fefefe;
-  }
+  .block {
+    margin: 40px 0;
+  } 
   .ts-input-label {
     display: block;
     margin-bottom: 10px;
   }
+  .labeled-input {
+    display: inline-block;
+
+    > span {
+      display: block;
+      text-align: left;
+      font-size: 0.9em;
+      margin-bottom: 2px;
+      color: #bbb;
+    }
+  }
   .input {
+    background: #404552;
+    color: #d3dae3;
     padding: 10px 20px;
     border: none;
-    border-left: solid 10px seagreen;
-    box-shadow: 1px 1px 5px #bbb;
+    border-left: solid 10px #4caf50;
+    box-shadow: 1px 1px 10px #222;
     border-radius: 3px;
 
     font-size: 20px;
     font-family: monospace;
-    text-align: center;
+    text-align: left;
 
     &:active, &:focus {
       outline: none;
     }
     &.error {
-      border-color: red;
+      border-color: #f44336;
       box-shadow: 1px 1px 5px rgba(255, 100, 100, 0.7);
     }
   }
@@ -134,8 +142,9 @@ export default {
     font-size: 20px;
   }
   .transfert-arrow {
-    font-size: 21px;
+    font-size: 30px;
     margin: 0 10px;
-    display: inline-block;
+    top: 4px;
+    position: relative;
   }
 </style>

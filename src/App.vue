@@ -1,14 +1,15 @@
 <template>
   <div id="app">
   
-  <router-link class="back-home-btn" tag="div" :to="{name: 'home'}">
-    <a><img src="/static/images/back-home.png" /></a>
-    <span>Jordan's Toolbox</span>
-  </router-link>
-      
+    <router-link class="top-header" tag="div" :to="{name: 'home'}">
+      <a><img src="/static/images/back-home.png" class="img-btn" /></a>
+      <span>Jordan's Toolbox</span>
     </router-link>
+      
+    <div class="active-tool">
+      <router-view ></router-view>
+    </div>
 
-    <router-view class="active-tool"></router-view>
   </div>
 </template>
 
@@ -20,7 +21,4 @@ export default {
 
 <style src="styles/global.scss" lang="scss"></style>
 <style lang="scss" scoped>
-  .active-tool {
-    margin-top: 80px;
-  }
 </style>
