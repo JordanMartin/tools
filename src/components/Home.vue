@@ -5,12 +5,12 @@
     <h2>Customs tools</h2>
     <div class="tools-list">
       <router-link :to="{name: 'timestamp'}">
-        <img src="/static/images/stopwatch.png" /> 
+        <img src="/static/images/stopwatch.png" />
         <span>Timestamp</span>
       </router-link>
 
       <router-link :to="{name: 'code-editor'}">
-        <img src="/static/images/coding.png" /> 
+        <img src="/static/images/coding.png" />
         <span>Code Editor</span>
       </router-link>
     </div>
@@ -18,8 +18,11 @@
     <h2>Bookmarks</h2>
     <div class="bookmark-list">
       <a href="https://regex101.com/">
-        <img src="/static/images/regex.png" /> 
+        <img src="/static/images/regex.png" />
         <span>Regex</span>
+      </a>
+      <a href="https://www.w3schools.com/charsets/ref_utf_arrows.asp">
+        <span>UTF-8 Icons</span>
       </a>
     </div>
   </div>
